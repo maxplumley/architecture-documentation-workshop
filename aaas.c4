@@ -1,0 +1,83 @@
+specification {
+    element actor {
+        notation 'Actor'
+        style {
+            shape person
+        }
+    }
+    element software-system {
+        notation 'Software System'
+        style {
+            color green
+        }
+    }
+    element container {
+        notation 'Container'
+    }
+    element component {
+        notation 'Component'
+        style {
+            shape component
+        }
+    }
+}
+
+model {
+    user = actor 'User'
+    oai = software-system 'OpenAI' {
+        style {
+            icon tech:openai
+        }
+    }
+    zai = software-system 'Z.ai'
+    aix = software-system 'AIX'
+
+    aaas = software-system 'AaaS' {
+        container gw 'API Gateway' {
+            style {
+                icon tech:envoy
+            }
+        }
+        container ah 'Agent Harness'
+        container lp 'LLM Provider'
+        container ad 'AaaS Datastore' {
+            style {
+                shape storage
+                icon tech:postgresql
+            }
+        }
+
+        gw -> ah 'Forwards requests' {
+            technology 'HTTPS'
+        }
+        ah -> lp 'Accesses models via' {
+            technology 'HTTPS'
+        }
+        ah -> ad 'Stores data in' {
+            technology 'HTTPS'
+        }
+    }
+
+    aix -> aaas 'Consumes AI Agent Harness API' {
+        technology 'HTTPS'
+    }
+    aaas -> oai 'Forwards completions'  {
+        technology 'HTTPS'
+    }
+    aaas -> zai 'Forwards completions'  {
+        technology 'HTTPS'
+    }
+    user -> aix 'Uses in browser'
+    user -> aaas 'Uses in automation'  {
+        technology 'HTTPS'
+    }
+}
+
+views {
+    view aaas-container {
+        include 
+            aaas.*,
+            aaas.* -> *,
+            * -> aaas.*
+    }
+}
