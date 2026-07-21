@@ -1,0 +1,55 @@
+---
+name: Publish to GitHub Wiki
+
+on:
+  push:
+    branches:
+      - main
+    paths: [docs/**, .github/workflows/publish-wiki.yaml]
+
+concurrency:
+  group: docs
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  wiki:
+    name: Publish to GitHub Wiki
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          repository: ${{github.repository}}
+          path: ${{github.repository}}
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24.11"
+
+      - name: Install Playwright Browsers
+        run: npx playwright@1.60.0 install --with-deps
+
+      - name: Generate Diagrams
+        run: |
+          npx likec4@1.59.1 export png $GITHUB_WORKSPACE/${{github.repository}} -o $GITHUB_WORKSPACE/${{github.repository}}/build --seq --notation
+
+      - name: Checkout Wiki
+        uses: actions/checkout@v4
+        with:
+          repository: ${{github.repository}}.wiki
+          path: ${{github.repository}}.wiki
+
+      - name: Push to wiki
+        run: |
+          set -e
+          cd $GITHUB_WORKSPACE/${{github.repository}}.wiki
+          cp -r $GITHUB_WORKSPACE/${{github.repository}}/docs/* .
+          cp -r $GITHUB_WORKSPACE/${{github.repository}}/build ./images
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff-index --quiet HEAD || git commit -m "chore(ci): publish wiki" && git push
