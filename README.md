@@ -167,7 +167,7 @@ We now have both a specification and model, which is enough to begin generating 
 
 > The LikeC4 tooling demonstrated in this workshop requires that you have NodeJS installed. If you don't have NodeJS, install the latest version from the [official NodeJS website](https://nodejs.org/en/download).
 
-LikeC4 provides a number of ways to generate diagrams from `.c4` files, and the first we'll look at is the LikeC4 server, which can generate a live preview that give us instantaneous feedback as we modify our model. In the same directory as your `aaas.c4` file, start the server with the `LikeC4` CLI:
+LikeC4 provides a number of ways to generate diagrams from `.c4` files, and the first we'll look at is the LikeC4 server, which can generate a live preview that gives us instantaneous feedback as we modify our model. In the same directory as your `aaas.c4` file, start the server with the `LikeC4` CLI:
 
 ```shell
 npx likec4@1.59.1 start
