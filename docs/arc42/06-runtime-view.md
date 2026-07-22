@@ -2,4 +2,4 @@
 
 ## Create New Agent Flow
 
-![Create New Agent Flow Sequence Diagram](image/create-new-agent.png)
+![Create New Agent Flow Sequence Diagram](images/create-new-agent.png)
